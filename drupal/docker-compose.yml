@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+
+        database: 
+                image: mariadb
+                restart: always
+                volumes: 
+                        - sql_storage:/var/lib/mysql
+                environment:
+                        MYSQL_ROOT_PASSWORD: sqlpass
+                        MYSQL_USER: akshat
+                        MYSQL_PASSWORD: userpass
+                        MYSQL_DATABASE: dp_db
+
+        drupalos:
+                image: drupal
+                restart: always
+                depends_on:
+                        - database
+                ports:
+                        - 8080:80
+                volumes:
+                        - dp_storage:/var/www/html
+                environment:
+                        DRUPAL_DATABASE_HOST: database
+                        DRUPAL_DATABASE_USERNAME: akshat
+                        DRUPAL_DATABASE_PASSWORD: userpass
+                        DRUPAL_DATABASE_NAME: dp_db
+
+volumes:
+        sql_storage:
+        dp_storage:
